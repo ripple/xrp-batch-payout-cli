@@ -6,6 +6,7 @@ import prompts from 'prompts'
 import * as z from 'zod'
 
 import log from './log'
+import { validateObjects } from './schema'
 
 /**
  * Parse CSV to an array of objects and validate against a schema.
@@ -70,30 +71,6 @@ export async function parseFromPromptToObject<T>(
   const answers = schema.parse(await prompts(questions))
 
   return answers
-}
-
-/**
- * Validate objects in an array against a schema and bind
- * the type from the schema to the validated data.
- *
- * @param objects - The array of objects to validate.
- * @param schema - The schema to validate the objects array.
- *
- * @returns Array of validated, typed objects.
- * @throws Error if validation fails.
- */
-export function validateObjects<T>(
-  objects: unknown[],
-  schema: z.Schema<T>,
-): T[] {
-  // Validate parsed output against a schema and bind types
-  // to the validated output
-  const validatedResult: T[] = []
-  objects.forEach((account: unknown, _index: number) => {
-    validatedResult.push(schema.parse(account))
-  })
-
-  return validatedResult
 }
 
 /**

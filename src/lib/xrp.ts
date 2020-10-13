@@ -1,3 +1,6 @@
+/* eslint-disable import/max-dependencies -- Need 1 more dependency in this file, and a refactor is unnecessary. */
+import fs from 'fs'
+
 // XRP logic - connect to XRPL and reliably send a payment
 import { WalletFactory } from 'xpring-common-js'
 import xrpUtils from 'xpring-common-js/build/src/XRP/xrp-utils'
@@ -8,10 +11,12 @@ import {
   Wallet,
   TransactionStatus,
 } from 'xpring-js'
+import * as z from 'zod'
 
 import { retryLimit } from './config'
+import { parseFromObjectToCsv } from './io'
 import log from './log'
-import { TxInput } from './schema'
+import { TxInput, TxOutput } from './schema'
 
 /**
  * Connect to the XRPL network.
@@ -171,4 +176,62 @@ export async function checkPayment(
   ) {
     throw Error('Transaction failed.')
   }
+}
+
+/**
+ * Reliably send a batch of XRP payments from an array of transaction inputs.
+ * If any payment fails, exit. As payments succeed, write the output to a CSV.
+ * This guarantees that if any payment fails, we will still have a log of
+ * succeeded payments (and of course if all payments succeed we will have a
+ * log as well).
+ *
+ * @param txInputs - An array of validated transaction inputs to send payments.
+ * @param txOutputWriteStream - The write stream .
+ * @param txOutputSchema - The output schema.
+ * @param senderWallet - The sender wallet.
+ * @param xrpClient - The XRP network client.
+ * @param usdToXrpRate - The price of XRP in USD.
+ */
+// eslint-disable-next-line max-params -- Keep regular parameters for a simpler type signature.
+export async function reliableBatchPayment(
+  txInputs: TxInput[],
+  txOutputWriteStream: fs.WriteStream,
+  txOutputSchema: z.Schema<TxOutput>,
+  senderWallet: Wallet,
+  xrpClient: XrpClient,
+  usdToXrpRate: number,
+): Promise<void> {
+  for (const [index, txInput] of txInputs.entries()) {
+    // eslint-disable-next-line no-await-in-loop -- We want sequential execution in this loop.
+    const txHash = await submitPayment(
+      senderWallet,
+      xrpClient,
+      txInput,
+      usdToXrpRate,
+    )
+    // Reliable send - guarantee success or throw an error.
+    // Don't continue unless we have the guarantee
+    // that the payment is successful
+    // eslint-disable-next-line no-await-in-loop -- We want sequential execution in this loop.
+    await checkPayment(xrpClient, txHash, retryLimit, 0)
+
+    // Transform transaction input to output
+    const txOutput = {
+      ...txInput,
+      transactionHash: txHash,
+      usdToXrpRate,
+    }
+
+    // Write transaction output to CSV, only use headers on first input
+    parseFromObjectToCsv(
+      txOutputWriteStream,
+      txOutputSchema,
+      txOutput,
+      index === 0,
+    )
+  }
+
+  log.info(
+    `Batch payout complete succeeded. Reliably sent ${txInputs.length} XRP payments.`,
+  )
 }

@@ -91,7 +91,6 @@ export function parseFromObjectToCsv<T>(
   header: boolean,
 ): string {
   // Validate data before writing to CSV
-  log.info(`Writing entry to ${stream.path as string}..`)
   const parsedData = schema.parse(data)
   const csvData = unparse([parsedData] as never[], {
     header,
@@ -101,7 +100,7 @@ export function parseFromObjectToCsv<T>(
   if (!stream.write(csvData)) {
     throw Error(`Failed to write ${csvData} to ${stream.path as string}.`)
   }
-  log.info(`Wrote 1 entry to ${stream.path as string}.`)
+  log.info(`Wrote ${csvData} to ${stream.path as string}.`)
 
   return csvData
 }

@@ -19,7 +19,7 @@
     "test/*"
   ],
   "scripts": {
-    "build": "rm -rf dist && npm run lintNoFix && tsc --esmod--project . && npm run test",
+    "build": "rm -rf build && npm run lintNoFix && tsc --esmod --project . && npm run test",
     "buildWatch": "tsc --watch --project .",
     "lint": "eslint . --ext .ts --fix --max-warnings 0 && prettier --write '**/*.{md,json}'",
     "lintNoFix": "eslint . --ext .ts --max-warnings 0 && prettier --check '**/*.{md,json}'",

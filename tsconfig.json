@@ -1,0 +1,39 @@
+{
+  "includes": ["src/**/*.ts"],
+
+  "compileOnSave": true,
+  "compilerOptions": {
+    // Basic Options
+    "project": ".",
+    "outDir": "./build",
+    "target": "es2019",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "incremental": true,
+
+    // Add support for custom typings
+    "baseUrl": "./",
+    "paths": {
+      "*": ["@types/*"]
+    },
+
+    // Source Maps & Declaration Files
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // Strict Mode
+    "strict": true,
+
+    // Checks not in "strict" mode
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Enables loading static JSON modules
+    "resolveJsonModule": true
+  }
+}

@@ -50,7 +50,7 @@ export default async function payout(override?: unknown): Promise<void> {
     )
 
     // Connect to XRPL
-    const xrpNetworkClient = await connectToLedger(
+    const [xrpNetworkClient] = await connectToLedger(
       senderInput.grpcUrl,
       senderInput.network,
       classicAddress,

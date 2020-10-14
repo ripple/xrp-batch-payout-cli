@@ -1,7 +1,7 @@
 // XRP payout script
 import fs from 'fs'
 
-import { questions } from '../lib/config'
+import { questions, retryLimit } from '../lib/config'
 import { parseFromCsvToArray, parseFromPromptToObject } from '../lib/io'
 import log from '../lib/log'
 import {
@@ -56,7 +56,7 @@ export default async function payout(override?: unknown): Promise<void> {
       classicAddress,
     )
 
-    // Reliably send XRP to accounts specified in txInputs
+    // Reliably send XRP to accounts specified in transaction inputs
     const txOutputWriteStream = fs.createWriteStream(senderInput.inputCsv)
     await reliableBatchPayment(
       txInputs,
@@ -65,6 +65,7 @@ export default async function payout(override?: unknown): Promise<void> {
       wallet,
       xrpNetworkClient,
       senderInput.usdToXrpRate,
+      retryLimit,
     )
   } catch (err) {
     log.error(err)

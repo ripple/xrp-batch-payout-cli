@@ -1,9 +1,8 @@
-/* eslint-disable import/max-dependencies -- Need 1 more dependency in this file, and a refactor is unnecessary. */
+/* eslint-disable no-await-in-loop -- We want sequential execution when submitting the XRP payments in reliableBatchPayment. */
+// XRP logic - connect to XRPL and reliably send a payment
 import fs from 'fs'
 
-// XRP logic - connect to XRPL and reliably send a payment
 import { WalletFactory } from 'xpring-common-js'
-import xrpUtils from 'xpring-common-js/build/src/XRP/xrp-utils'
 import {
   XrpClient,
   XrplNetwork,
@@ -35,7 +34,7 @@ export async function connectToLedger(
   log.info(`Connecting to the XRPL ${network}..`)
   // `true` uses the web gRPC endpoint, which is currently more reliable
   const xrpClient = new XrpClient(grpcUrl, network, true)
-  const xAddress = xrpUtils.encodeXAddress(classicAddress, 0) as string
+  const xAddress = XrpUtils.encodeXAddress(classicAddress, 0) as string
   // Get balance in XRP - network call validates that we are connected to the ledger
   const balance = XrpUtils.dropsToXrp(
     (await xrpClient.getBalance(xAddress)).valueOf(),
@@ -140,7 +139,7 @@ export async function submitPayment(
  *
  * @param xrpClient - XRPL network client.
  * @param txHash - XRPL transaction hash.
- * @param numRetries - Number of times to retry on a pending tx. Default is 3.
+ * @param numRetries - Number of times to retry on a pending tx. Defaults to 3.
  * @param index - Index for recursion, should stay at default of 0.
  *
  * @returns XRPL transaction hash.
@@ -149,7 +148,7 @@ export async function submitPayment(
 export async function checkPayment(
   xrpClient: XrpClient,
   txHash: string,
-  numRetries = retryLimit,
+  numRetries: number,
   index = 0,
 ): Promise<void> {
   log.info(
@@ -186,11 +185,12 @@ export async function checkPayment(
  * log as well).
  *
  * @param txInputs - An array of validated transaction inputs to send payments.
- * @param txOutputWriteStream - The write stream .
+ * @param txOutputWriteStream - The write stream.
  * @param txOutputSchema - The output schema.
  * @param senderWallet - The sender wallet.
  * @param xrpClient - The XRP network client.
  * @param usdToXrpRate - The price of XRP in USD.
+ * @param numRetries - The amount of times to retry a pending payment.
  */
 // eslint-disable-next-line max-params -- Keep regular parameters for a simpler type signature.
 export async function reliableBatchPayment(
@@ -200,9 +200,9 @@ export async function reliableBatchPayment(
   senderWallet: Wallet,
   xrpClient: XrpClient,
   usdToXrpRate: number,
+  numRetries: number,
 ): Promise<void> {
   for (const [index, txInput] of txInputs.entries()) {
-    // eslint-disable-next-line no-await-in-loop -- We want sequential execution in this loop.
     const txHash = await submitPayment(
       senderWallet,
       xrpClient,
@@ -212,8 +212,7 @@ export async function reliableBatchPayment(
     // Reliable send - guarantee success or throw an error.
     // Don't continue unless we have the guarantee
     // that the payment is successful
-    // eslint-disable-next-line no-await-in-loop -- We want sequential execution in this loop.
-    await checkPayment(xrpClient, txHash, retryLimit, 0)
+    await checkPayment(xrpClient, txHash, numRetries)
 
     // Transform transaction input to output
     const txOutput = {

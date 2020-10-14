@@ -11,12 +11,14 @@
     "url": "git+https://github.com/ripple/xrp-batch-payout.git"
   },
   "license": "Apache-2.0",
-  "author": "",
-  "main": "bin/index.js",
+  "author": "Dino Rodriguez",
+  "main": "build/src/index.js",
   "types": "build/index.d.ts",
+  "bin": "./bin/index.js",
   "files": [
     "src/*",
-    "test/*"
+    "test/*",
+    "build/*"
   ],
   "scripts": {
     "build": "rm -rf build && tsc --project .",
@@ -30,6 +32,7 @@
     "testWatch": "nyc mocha --watch 'test/**/*.test.ts'"
   },
   "dependencies": {
+    "commander": "^6.1.0",
     "papaparse": "^5.3.0",
     "prompts": "^2.3.2",
     "tslog": "^2.9.0",

@@ -40,15 +40,7 @@ export const questions: prompts.PromptObject[] = [
     type: 'text',
     name: 'grpcUrl',
     message: 'Web gRPC URL of the rippleD node?',
-    /**
-     * Assign the default web gRPC endpoint based on the previous answer.
-     *
-     * @param prev - Value from previous prompt (i.e. 'mainnet' or 'testnet').
-     *
-     * @returns Mainnet or testnet web gRPC rippleD node endpoint.
-     */
-    format: (prev: XrplNetwork): WebGrpcEndpoint =>
-      prev === XrplNetwork.Main ? WebGrpcEndpoint.Main : WebGrpcEndpoint.Test,
+    initial: WebGrpcEndpoint.Main,
   },
   {
     type: 'number',

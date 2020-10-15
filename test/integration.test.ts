@@ -11,8 +11,8 @@ import inputArray from './data/input'
 describe('Integration Tests', function () {
   it('Golden path - successfully completes the batch payout with valid inputs', async function () {
     // Increase the timeout because this is a long test
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- This is only used here.
-    this.timeout(30000)
+    const timeout = 30000
+    this.timeout(timeout)
 
     // Run the batch payout script
     await payout(this.overrides)

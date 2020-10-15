@@ -94,10 +94,11 @@ export function parseFromObjectToCsv<T>(
   const parsedData = schema.parse(data)
   const csvData = unparse([parsedData] as never[], {
     header,
-    skipEmptyLines: true,
   })
 
-  if (!stream.write(csvData)) {
+  // PapaParse doesn't add a newline or carriage return to the last line
+  // Since we writing one line at a time, we need add the character ourselves
+  if (!stream.write(`${csvData}\r\n`)) {
     throw Error(`Failed to write ${csvData} to ${stream.path as string}.`)
   }
   log.info(`Wrote ${csvData} to ${stream.path as string}.`)

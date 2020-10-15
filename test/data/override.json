@@ -1,6 +1,6 @@
 {
   "inputCsv": "./test/data/input.csv",
-  "outputCsv": "./output.csv",
+  "outputCsv": "./test/data/output.csv",
   "network": "testnet",
   "grpcUrl": "https://envoy.test.xrp.xpring.io",
   "maxFee": 0.01,

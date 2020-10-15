@@ -1,8 +1,6 @@
-/* eslint-disable max-statements -- Allow a longer function for test setup. This only lives here and won't be re-used. */
 import fs from 'fs'
 import path from 'path'
 
-import { assert } from 'chai'
 import fetch from 'node-fetch'
 import { XrpClient, XrplNetwork } from 'xpring-js'
 
@@ -17,7 +15,7 @@ declare module 'mocha' {
     xrpNetworkClient: XrpClient
   }
 }
-// eslint-disable-next-line mocha/no-top-level-hooks -- This file is meant to have top level hooks..
+// eslint-disable-next-line mocha/no-top-level-hooks -- This file is meant to have top level hooks.
 before(async function () {
   // Increase the timeout because we need to fund a testnet account
   const testTimeout = 15000
@@ -64,10 +62,4 @@ before(async function () {
   this.overrides.secret = secret
   this.testBalance = balance
   this.xrpNetworkClient = xrpNetworkClient
-})
-
-// Temporary -- should be able to remove after we have more tests
-// eslint-disable-next-line mocha/no-global-tests -- Temp.
-it('Confirms testnet account is funded', async function () {
-  assert.strictEqual(this.testBalance, 1000)
 })

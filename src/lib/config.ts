@@ -51,6 +51,7 @@ export const questions: prompts.PromptObject[] = [
   },
   {
     type: 'number',
+    float: true,
     name: 'usdToXrpRate',
     message: 'USD to XRP rate (price of 1 XRP in USD)?',
   },

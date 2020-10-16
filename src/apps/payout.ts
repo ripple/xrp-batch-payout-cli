@@ -4,6 +4,8 @@ function long, but not particularly complex. */
 // XRP payout script
 import fs from 'fs'
 
+import { ZodError } from 'zod'
+
 import { questions, retryLimit } from '../lib/config'
 import { parseFromCsvToArray, parseFromPromptToObject } from '../lib/io'
 import log from '../lib/log'
@@ -84,6 +86,10 @@ export default async function payout(override?: unknown): Promise<void> {
       `Batch payout complete succeeded. Reliably sent ${txInputs.length} XRP payments.`,
     )
   } catch (err) {
-    log.error(err)
+    if (err instanceof ZodError) {
+      log.error(err.errors)
+    } else {
+      log.error(err)
+    }
   }
 }

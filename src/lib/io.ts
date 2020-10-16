@@ -6,6 +6,7 @@ import prompts from 'prompts'
 import * as z from 'zod'
 
 import log from './log'
+import { validateObjects } from './schema'
 
 /**
  * Parse CSV to an array of objects and validate against a schema.
@@ -73,30 +74,6 @@ export async function parseFromPromptToObject<T>(
 }
 
 /**
- * Validate objects in an array against a schema and bind
- * the type from the schema to the validated data.
- *
- * @param objects - The array of objects to validate.
- * @param schema - The schema to validate the objects array.
- *
- * @returns Array of validated, typed objects.
- * @throws Error if validation fails.
- */
-export function validateObjects<T>(
-  objects: unknown[],
-  schema: z.Schema<T>,
-): T[] {
-  // Validate parsed output against a schema and bind types
-  // to the validated output
-  const validatedResult: T[] = []
-  objects.forEach((account: unknown, _index: number) => {
-    validatedResult.push(schema.parse(account))
-  })
-
-  return validatedResult
-}
-
-/**
  * Parse and validate an object against a schema and write to CSV.
  *
  * @param stream - A CSV write stream.
@@ -114,17 +91,17 @@ export function parseFromObjectToCsv<T>(
   header: boolean,
 ): string {
   // Validate data before writing to CSV
-  log.info(`Writing entry to ${stream.path as string}..`)
   const parsedData = schema.parse(data)
   const csvData = unparse([parsedData] as never[], {
     header,
-    skipEmptyLines: true,
   })
 
-  if (!stream.write(csvData)) {
+  // PapaParse doesn't add a newline or carriage return to the last line
+  // Since we writing one line at a time, we need add the character ourselves
+  if (!stream.write(`${csvData}\r\n`)) {
     throw Error(`Failed to write ${csvData} to ${stream.path as string}.`)
   }
-  log.info(`Wrote 1 entry to ${stream.path as string}.`)
+  log.info(`Wrote ${csvData} to ${stream.path as string}.`)
 
   return csvData
 }

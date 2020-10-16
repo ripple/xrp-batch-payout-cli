@@ -23,8 +23,8 @@
   "scripts": {
     "build": "rm -rf build && tsc --project .",
     "buildWatch": "rm -rf build && tsc --watch --project .",
-    "fullBuild": "npm run lintNoFix && npm run build && npm run test",
-    "generateDocs": "typedoc --name xrp-batch-payout --out ./docs .",
+    "fullBuild": "npm run lintNoFix && npm run build && npm run test && generateDocs",
+    "generateDocs": "typedoc --name xrp-batch-payout --out ./docs ./src",
     "lint": "eslint . --ext .ts --fix --max-warnings 0 && prettier --write '**/*.{md,json}'",
     "lintNoFix": "eslint . --ext .ts --max-warnings 0 && prettier --check '**/*.{md,json}'",
     "lintWatch": "chokidar src/**/*.ts -c \"npm run lint\" --initial --verbose",
@@ -70,7 +70,6 @@
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "ts-node": "^8.10.2",
-    "tsc-watch": "^4.2.9",
     "typedoc": "^0.19.2",
     "typescript": "^3.9.5"
   },

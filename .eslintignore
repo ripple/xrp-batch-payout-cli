@@ -1,7 +1,6 @@
 # Do not lint generated files.
-src/generated
 build
-dist
+docs
 
 # Don't ever lint node_modules
 node_modules

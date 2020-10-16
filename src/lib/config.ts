@@ -45,6 +45,7 @@ export const questions: prompts.PromptObject[] = [
   {
     type: 'number',
     float: true,
+    round: 6,
     name: 'maxFee',
     message: 'Max fee per transaction (in XRP)?',
     initial: 0.01,
@@ -52,6 +53,7 @@ export const questions: prompts.PromptObject[] = [
   {
     type: 'number',
     float: true,
+    round: 6,
     name: 'usdToXrpRate',
     message: 'USD to XRP rate (price of 1 XRP in USD)?',
   },

@@ -121,7 +121,7 @@ export async function submitPayment(
   log.info('Submitting payment transaction..')
   log.info(`  -> Name: ${name}`)
   log.info(`  -> Classic address: ${destinationClassicAddress}`)
-  log.info(`  -> Destination tag: ${destinationClassicAddress}`)
+  log.info(`  -> Destination tag: ${destinationTag ?? 'null'}`)
   log.info(`  -> Amount: ${xrpDestinationAmount} XRP valued at $${usdAmount}`)
   const txHash = await xrpClient.send(
     dropDestinationAmount,

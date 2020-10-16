@@ -3,7 +3,7 @@ import prompts from 'prompts'
 import { XrplNetwork } from 'xpring-js'
 
 // Web gRPC rippleD node endpoints hosted by RippleX
-enum WebGrpcEndpoint {
+export enum WebGrpcEndpoint {
   Main = 'https://envoy.main.xrp.xpring.io',
   Test = 'https://envoy.test.xrp.xpring.io',
 }

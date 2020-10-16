@@ -50,14 +50,14 @@ export default async function payout(override?: unknown): Promise<void> {
     )
 
     // Connect to XRPL
-    const xrpNetworkClient = await connectToLedger(
+    const [xrpNetworkClient] = await connectToLedger(
       senderInput.grpcUrl,
       senderInput.network,
       classicAddress,
     )
 
     // Reliably send XRP to accounts specified in transaction inputs
-    const txOutputWriteStream = fs.createWriteStream(senderInput.inputCsv)
+    const txOutputWriteStream = fs.createWriteStream(senderInput.outputCsv)
     await reliableBatchPayment(
       txInputs,
       txOutputWriteStream,

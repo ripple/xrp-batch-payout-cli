@@ -8,8 +8,8 @@ import { txOutputSchema } from '../src/lib/schema'
 
 import inputArray from './data/input'
 
-describe('Integration Tests', function () {
-  it('Golden path - successfully completes the batch payout with valid inputs', async function () {
+describe('Integration Tests -- Golden Path', function () {
+  it('Successfully completes the batch payout with valid inputs', async function () {
     // Increase the timeout because this is a long test
     const timeout = 30000
     this.timeout(timeout)

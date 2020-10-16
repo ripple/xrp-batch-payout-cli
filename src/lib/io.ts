@@ -5,7 +5,6 @@ import { parse, unparse, ParseResult } from 'papaparse'
 import prompts from 'prompts'
 import * as z from 'zod'
 
-import log from './log'
 import { validateObjects } from './schema'
 
 /**
@@ -22,7 +21,6 @@ export async function parseFromCsvToArray<T>(
   stream: fs.ReadStream,
   schema: z.Schema<T>,
 ): Promise<T[]> {
-  log.info(`Parsing data from ${stream.path as string}..`)
   const result: ParseResult<T> = await new Promise((complete, error) => {
     parse(stream, {
       header: true,
@@ -39,10 +37,7 @@ export async function parseFromCsvToArray<T>(
   }
 
   // Validate parsed output against schema
-  const validatedOutput = validateObjects(result.data, schema)
-  log.info(`Parsed and validated ${validatedOutput.length} entries.`)
-
-  return validatedOutput
+  return validateObjects(result.data, schema)
 }
 
 /**
@@ -101,7 +96,6 @@ export function parseFromObjectToCsv<T>(
   if (!stream.write(`${csvData}\r\n`)) {
     throw Error(`Failed to write ${csvData} to ${stream.path as string}.`)
   }
-  log.info(`Wrote ${csvData} to ${stream.path as string}.`)
 
   return csvData
 }

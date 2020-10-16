@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function -- One line over on reliableBatchPayment. */
 /* eslint-disable no-await-in-loop -- We want sequential execution when submitting the XRP payments in reliableBatchPayment. */
 // XRP logic - connect to XRPL and reliably send a payment
 import fs from 'fs'
@@ -32,7 +33,6 @@ export async function connectToLedger(
   network: XrplNetwork,
   classicAddress: string,
 ): Promise<[XrpClient, number]> {
-  log.info(`Connecting to the XRPL ${network}..`)
   // `true` uses the web gRPC endpoint, which is currently more reliable
   const xrpClient = new XrpClient(grpcUrl, network, true)
   const xAddress = XrpUtils.encodeXAddress(classicAddress, 0) as string
@@ -40,9 +40,6 @@ export async function connectToLedger(
   const balance = XrpUtils.dropsToXrp(
     (await xrpClient.getBalance(xAddress)).valueOf(),
   )
-  log.info(`Connected to the XRPL ${network}.`)
-  log.info(`  -> RippleD node web gRPC endpoint: ${grpcUrl}`)
-  log.info(`  -> Sender address (${classicAddress}) balance: ${balance} XRP`)
 
   return [xrpClient, parseFloat(balance)]
 }
@@ -60,7 +57,6 @@ export function generateWallet(
   secret: string,
   network: XrplNetwork,
 ): [Wallet, string] {
-  log.info(`Generating ${network} wallet from secret..`)
   const wallet = new WalletFactory(network).walletFromSeed(secret)
   // Casting allowed because we validate afterwards
   const xAddress = wallet?.getAddress() as string
@@ -74,10 +70,6 @@ export function generateWallet(
   ) {
     throw Error('Failed to generate wallet from secret.')
   }
-
-  log.info('Generated wallet from secret.')
-  log.info(`  -> Sender XRPL X-Address: ${xAddress}`)
-  log.info(`  -> Sender XRPL Classic address: ${classicAddress}`)
 
   // Xpring-JS recommends using WalletFactory to generate addresses
   // but the Wallet object returned is incompatible with the Wallet
@@ -108,7 +100,6 @@ export async function submitPayment(
     address: destinationClassicAddress,
     destinationTag,
     usdAmount,
-    name,
   } = receiverAccount
   const destinationXAddress = XrpUtils.encodeXAddress(
     destinationClassicAddress,
@@ -118,18 +109,11 @@ export async function submitPayment(
   const dropDestinationAmount = XrpUtils.xrpToDrops(xrpDestinationAmount)
 
   // Submit payment
-  log.info('Submitting payment transaction..')
-  log.info(`  -> Name: ${name}`)
-  log.info(`  -> Classic address: ${destinationClassicAddress}`)
-  log.info(`  -> Destination tag: ${destinationTag ?? 'null'}`)
-  log.info(`  -> Amount: ${xrpDestinationAmount} XRP valued at $${usdAmount}`)
   const txHash = await xrpClient.send(
     dropDestinationAmount,
     destinationXAddress,
     senderWallet,
   )
-  log.info('Submitted payment transaction.')
-  log.info(`  -> Tx hash: ${txHash}`)
 
   return txHash
 }
@@ -143,7 +127,8 @@ export async function submitPayment(
  * @param numRetries - Number of times to retry on a pending tx. Defaults to 3.
  * @param index - Index for recursion, should stay at default of 0.
  *
- * @returns XRPL transaction hash.
+ * @returns True on success. False should never be returned - this would
+ * indicate that there has been a change to transactions statuses on XRPL.
  * @throws Error if transaction failed or is unknown.
  */
 export async function checkPayment(
@@ -151,7 +136,7 @@ export async function checkPayment(
   txHash: string,
   numRetries: number,
   index = 0,
-): Promise<void> {
+): Promise<boolean> {
   log.info(
     `Checking that tx has been validated.. (${
       index + 1
@@ -159,9 +144,9 @@ export async function checkPayment(
   )
   const txStatus = await xrpClient.getPaymentStatus(txHash)
   if (txStatus === TransactionStatus.Succeeded) {
-    log.info('Transaction successfully validated. Your money has been sent.')
-    log.info(`  -> Tx hash: ${txHash}`)
-  } else if (txStatus === TransactionStatus.Pending) {
+    return true
+  }
+  if (txStatus === TransactionStatus.Pending) {
     if (index >= numRetries) {
       throw Error(
         `Retry limit of ${numRetries} reached. Transaction still pending.`,
@@ -176,6 +161,8 @@ export async function checkPayment(
   ) {
     throw Error('Transaction failed.')
   }
+
+  return false
 }
 
 /**
@@ -204,16 +191,29 @@ export async function reliableBatchPayment(
   numRetries: number,
 ): Promise<void> {
   for (const [index, txInput] of txInputs.entries()) {
+    // Submit payment
+    log.info('Submitting payment transaction..')
+    log.info(`  -> Name: ${txInput.name}`)
+    log.info(`  -> Receiver classic address: ${txInput.address}`)
+    log.info(`  -> Destination tag: ${txInput.destinationTag ?? 'null'}`)
+    log.info(
+      `  -> Amount: ${txInput.usdAmount / usdToXrpRate} XRP valued at $${
+        txInput.usdAmount
+      }`,
+    )
     const txHash = await submitPayment(
       senderWallet,
       xrpClient,
       txInput,
       usdToXrpRate,
     )
-    // Reliable send - guarantee success or throw an error.
-    // Don't continue unless we have the guarantee
-    // that the payment is successful
+    log.info('Submitted payment transaction.')
+    log.info(`  -> Tx hash: ${txHash}`)
+
+    // Only continue if the payment was successful, otherwise throw an error
     await checkPayment(xrpClient, txHash, numRetries)
+    log.info('Transaction successfully validated. Your money has been sent.')
+    log.info(`  -> Tx hash: ${txHash}`)
 
     // Transform transaction input to output
     const txOutput = {
@@ -223,15 +223,12 @@ export async function reliableBatchPayment(
     }
 
     // Write transaction output to CSV, only use headers on first input
-    parseFromObjectToCsv(
+    const csvData = parseFromObjectToCsv(
       txOutputWriteStream,
       txOutputSchema,
       txOutput,
       index === 0,
     )
+    log.info(`Wrote "${csvData}" to ${txOutputWriteStream.path as string}.`)
   }
-
-  log.info(
-    `Batch payout complete succeeded. Reliably sent ${txInputs.length} XRP payments.`,
-  )
 }

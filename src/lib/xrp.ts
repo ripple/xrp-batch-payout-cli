@@ -24,13 +24,14 @@ import { TxInput, TxOutput } from './schema'
  * @param network - The XRPL network (devnet/testnet/mainnet).
  * @param classicAddress - The sender's XRP classic address.
  *
- * @returns A decorated XRPL network client.
+ * @returns A decorated XRPL network client along with the provided address'
+ * balance.
  */
 export async function connectToLedger(
   grpcUrl: string,
   network: XrplNetwork,
   classicAddress: string,
-): Promise<XrpClient> {
+): Promise<[XrpClient, number]> {
   log.info(`Connecting to the XRPL ${network}..`)
   // `true` uses the web gRPC endpoint, which is currently more reliable
   const xrpClient = new XrpClient(grpcUrl, network, true)
@@ -43,7 +44,7 @@ export async function connectToLedger(
   log.info(`  -> RippleD node web gRPC endpoint: ${grpcUrl}`)
   log.info(`  -> Sender address (${classicAddress}) balance: ${balance} XRP`)
 
-  return xrpClient
+  return [xrpClient, parseFloat(balance)]
 }
 
 /**

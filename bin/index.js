@@ -15,7 +15,7 @@ program
 // Get overrides if the file path is set
 let overrides
 if (fs.existsSync(program.file)) {
-  overrides = JSON.parse(fs.readFileSync(program.file))
+  overrides = JSON.parse((fs.readFileSync(program.file)).toString())
 }
 
 // Start XRP payout

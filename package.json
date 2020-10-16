@@ -32,6 +32,7 @@
     "testWatch": "nyc mocha --watch 'test/**/*.test.ts'"
   },
   "dependencies": {
+    "chalk": "^4.1.0",
     "commander": "^6.1.0",
     "papaparse": "^5.3.0",
     "prompts": "^2.3.2",

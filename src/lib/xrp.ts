@@ -1,4 +1,5 @@
-/* eslint-disable max-lines-per-function -- One line over on reliableBatchPayment. */
+/* eslint-disable max-statements -- Triggered by log statements, so we ignore this. */
+/* eslint-disable max-lines-per-function -- Triggered by log statements, so we ignore this. */
 /* eslint-disable no-await-in-loop -- We want sequential execution when submitting the XRP payments in reliableBatchPayment. */
 // XRP logic - connect to XRPL and reliably send a payment
 import fs from 'fs'
@@ -15,7 +16,7 @@ import * as z from 'zod'
 
 import { retryLimit } from './config'
 import { parseFromObjectToCsv } from './io'
-import log from './log'
+import log, { green, black } from './log'
 import { TxInput, TxOutput } from './schema'
 
 /**
@@ -147,7 +148,7 @@ export async function checkPayment(
     return true
   }
   if (txStatus === TransactionStatus.Pending) {
-    if (index >= numRetries) {
+    if (index + 1 >= numRetries) {
       throw Error(
         `Retry limit of ${numRetries} reached. Transaction still pending.`,
       )
@@ -192,14 +193,22 @@ export async function reliableBatchPayment(
 ): Promise<void> {
   for (const [index, txInput] of txInputs.entries()) {
     // Submit payment
-    log.info('Submitting payment transaction..')
-    log.info(`  -> Name: ${txInput.name}`)
-    log.info(`  -> Receiver classic address: ${txInput.address}`)
-    log.info(`  -> Destination tag: ${txInput.destinationTag ?? 'null'}`)
+    log.info('')
+    log.info('----------')
     log.info(
-      `  -> Amount: ${txInput.usdAmount / usdToXrpRate} XRP valued at $${
-        txInput.usdAmount
-      }`,
+      `Submitting payment transaction.. (${index + 1} / ${
+        txInputs.length
+      } payments)`,
+    )
+    log.info(black(`  -> Name: ${txInput.name}`))
+    log.info(black(`  -> Receiver classic address: ${txInput.address}`))
+    log.info(black(`  -> Destination tag: ${txInput.destinationTag ?? 'null'}`))
+    log.info(
+      black(
+        `  -> Amount: ${txInput.usdAmount / usdToXrpRate} XRP valued at $${
+          txInput.usdAmount
+        }`,
+      ),
     )
     const txHash = await submitPayment(
       senderWallet,
@@ -208,12 +217,15 @@ export async function reliableBatchPayment(
       usdToXrpRate,
     )
     log.info('Submitted payment transaction.')
-    log.info(`  -> Tx hash: ${txHash}`)
+    log.info(black(`  -> Tx hash: ${txHash}`))
 
     // Only continue if the payment was successful, otherwise throw an error
+    log.info('')
     await checkPayment(xrpClient, txHash, numRetries)
-    log.info('Transaction successfully validated. Your money has been sent.')
-    log.info(`  -> Tx hash: ${txHash}`)
+    log.info(
+      green('Transaction successfully validated. Your money has been sent.'),
+    )
+    log.info(black(`  -> Tx hash: ${txHash}`))
 
     // Transform transaction input to output
     const txOutput = {
@@ -229,6 +241,7 @@ export async function reliableBatchPayment(
       txOutput,
       index === 0,
     )
+    log.info('')
     log.info(`Wrote "${csvData}" to ${txOutputWriteStream.path as string}.`)
   }
 }

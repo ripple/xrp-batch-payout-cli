@@ -37,7 +37,7 @@
     "prompts": "^2.3.2",
     "tslog": "^2.9.0",
     "xpring-common-js": "^6.2.2",
-    "xpring-js": "^5.1.1",
+    "xpring-js": "^5.2.0",
     "zod": "^1.11.9"
   },
   "devDependencies": {

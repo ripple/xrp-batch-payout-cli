@@ -10,8 +10,7 @@ import { txOutputSchema } from '../src/lib/schema'
 import inputArray from './data/input'
 import { getTestnetAccount } from './global.test'
 
-// eslint-disable-next-line mocha/no-skipped-tests -- skip for now.
-describe.skip('Integration Tests -- Golden Path', function () {
+describe('Integration Tests -- Golden Path', function () {
   before(async function () {
     // Get prompt overrides for tests
     const overridePath = path.join(__dirname, '.', 'data', 'override.json')

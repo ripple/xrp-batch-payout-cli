@@ -26,6 +26,7 @@ import {
  * Run the XRP payout script.
  *
  * @param override - Override prompt inputs. Useful for testing and debugging.
+ * @throws Re-throws error after logging.
  */
 export default async function payout(override?: unknown): Promise<void> {
   try {
@@ -102,5 +103,6 @@ export default async function payout(override?: unknown): Promise<void> {
     } else {
       log.error(err)
     }
+    throw err
   }
 }

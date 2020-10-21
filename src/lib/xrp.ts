@@ -106,7 +106,7 @@ export async function submitPayment(
     destinationClassicAddress,
     destinationTag ?? undefined,
   ) as string
-  const xrpDestinationAmount = usdAmount / usdToXrpRate
+  const xrpDestinationAmount = Number(usdAmount) / usdToXrpRate
   const dropDestinationAmount = XrpUtils.xrpToDrops(xrpDestinationAmount)
 
   // Submit payment
@@ -141,7 +141,7 @@ export async function checkPayment(
   log.info(
     `Checking that tx has been validated.. (${
       index + 1
-    }/${numRetries} retries)`,
+    } / ${numRetries} retries)`,
   )
   const txStatus = await xrpClient.getPaymentStatus(txHash)
   if (txStatus === TransactionStatus.Succeeded) {
@@ -194,11 +194,8 @@ export async function reliableBatchPayment(
   for (const [index, txInput] of txInputs.entries()) {
     // Submit payment
     log.info('')
-    log.info('----------')
     log.info(
-      `Submitting payment transaction.. (${index + 1} / ${
-        txInputs.length
-      } payments)`,
+      `Submitting ${index + 1} / ${txInputs.length} payment transactions..`,
     )
     log.info(black(`  -> Name: ${txInput.name}`))
     log.info(black(`  -> Receiver classic address: ${txInput.address}`))
@@ -220,12 +217,7 @@ export async function reliableBatchPayment(
     log.info(black(`  -> Tx hash: ${txHash}`))
 
     // Only continue if the payment was successful, otherwise throw an error
-    log.info('')
     await checkPayment(xrpClient, txHash, numRetries)
-    log.info(
-      green('Transaction successfully validated. Your money has been sent.'),
-    )
-    log.info(black(`  -> Tx hash: ${txHash}`))
 
     // Transform transaction input to output
     const txOutput = {
@@ -241,7 +233,8 @@ export async function reliableBatchPayment(
       txOutput,
       index === 0,
     )
-    log.info('')
-    log.info(`Wrote "${csvData}" to ${txOutputWriteStream.path as string}.`)
+    log.info(`Wrote entry to ${txOutputWriteStream.path as string}.`)
+    log.info(black(`  -> ${csvData}`))
+    log.info(green('Transaction successfully validated and recorded.'))
   }
 }

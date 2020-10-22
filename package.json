@@ -1,6 +1,6 @@
 {
   "name": "xrp-batch-payout",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A library and command-line tool for batched, reliable payouts with XRP.",
   "homepage": "https://github.com/ripple/xrp-batch-payout#readme",
   "bugs": {
@@ -70,7 +70,6 @@
     "node-fetch": "^2.6.1",
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
-    "ts-node": "^8.10.2",
     "ts-node": "^9.0.0",
     "typedoc": "^0.19.2",
     "typescript": "^3.9.5"

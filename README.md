@@ -3,12 +3,12 @@
 A library and command-line tool for batched, reliable payouts with XRP.
 
 ## Getting Started
-### NPM
+### NPM (recommended)
 1. `npm install xrp-batch-payout -g` (as a command-line tool)
   1. OR `npm install xrp-batch-payout` (as a library for an existing project)
 2. `xrp-batch-payout` (run command-line tool)
 
-### Git
+### Git (for development)
 1. `git clone https://github.com/ripple/xrp-batch-payout.git`
 2. `cd xrp-batch-utils`
 3. `npm install`
@@ -36,8 +36,8 @@ Prompt overrides help:
 
 Example prompt overrides object:
 {
-  "inputCsv": "./input.csv",
-  "outputCsv": "./output.csv",
+  "inputCsv": "input.csv",
+  "outputCsv": "output.csv",
   "network": "mainnet",
   "grpcUrl": "https://envoy.main.xrp.xpring.io",
   "maxFee": 0.01,

@@ -1,6 +1,4 @@
-import fs from 'fs'
-import path from 'path'
-
+import { Context } from 'mocha'
 import fetch from 'node-fetch'
 import { XrpClient, XrplNetwork } from 'xpring-js'
 
@@ -15,11 +13,20 @@ declare module 'mocha' {
     xrpNetworkClient: XrpClient
   }
 }
-// eslint-disable-next-line mocha/no-top-level-hooks -- This file is meant to have top level hooks.
-before(async function () {
+
+/**
+ * Get and fund XRPL testnet account.
+ *
+ * @param ctx - The mocha context.
+ * @throws On funding failure.
+ * @returns A tuple of balance and a connected XRP network client.
+ */
+export async function getTestnetAccount(
+  ctx: Context,
+): Promise<[string, number, XrpClient]> {
   // Increase the timeout because we need to fund a testnet account
   const testTimeout = 15000
-  this.timeout(testTimeout)
+  ctx.timeout(testTimeout)
 
   // Fetch acccount
   log.info('Getting funded testnet account..')
@@ -51,15 +58,5 @@ before(async function () {
   }
   log.info('Successfully funded testnet account.')
 
-  // Get prompt overrides for tests
-  const overridePath = path.join(__dirname, '.', 'data', 'override.json')
-  this.overrides = JSON.parse(
-    (await fs.promises.readFile(overridePath)).toString(),
-  )
-
-  // Set the funded testnet account secret
-  // Keep the balance and network client for tests
-  this.overrides.secret = secret
-  this.testBalance = balance
-  this.xrpNetworkClient = xrpNetworkClient
-})
+  return [secret, balance, xrpNetworkClient]
+}

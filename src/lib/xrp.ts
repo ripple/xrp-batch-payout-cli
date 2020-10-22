@@ -1,3 +1,4 @@
+/* eslint-disable import/max-dependencies -- We are 1 over here, and a refactor doesn't make sense. */
 /* eslint-disable max-statements -- Triggered by log statements, so we ignore this. */
 /* eslint-disable max-lines-per-function -- Triggered by log statements, so we ignore this. */
 /* eslint-disable no-await-in-loop -- We want sequential execution when submitting the XRP payments in reliableBatchPayment. */
@@ -12,6 +13,7 @@ import {
   Wallet,
   TransactionStatus,
 } from 'xpring-js'
+import { XrpErrorType } from 'xpring-js/build/XRP'
 import * as z from 'zod'
 
 import { retryLimit } from './config'
@@ -26,6 +28,7 @@ import { TxInput, TxOutput } from './schema'
  * @param network - The XRPL network (devnet/testnet/mainnet).
  * @param classicAddress - The sender's XRP classic address.
  *
+ * @throws Re-throws more informative errors connection failure.
  * @returns A decorated XRPL network client along with the provided address'
  * balance.
  */
@@ -34,15 +37,32 @@ export async function connectToLedger(
   network: XrplNetwork,
   classicAddress: string,
 ): Promise<[XrpClient, number]> {
-  // `true` uses the web gRPC endpoint, which is currently more reliable
-  const xrpClient = new XrpClient(grpcUrl, network, true)
-  const xAddress = XrpUtils.encodeXAddress(classicAddress, 0) as string
-  // Get balance in XRP - network call validates that we are connected to the ledger
-  const balance = XrpUtils.dropsToXrp(
-    (await xrpClient.getBalance(xAddress)).valueOf(),
-  )
+  let xrpClient: XrpClient
+  let balance: number
+  try {
+    // `true` uses the web gRPC endpoint, which is currently more reliable
+    xrpClient = new XrpClient(grpcUrl, network, true)
+    const xAddress = XrpUtils.encodeXAddress(classicAddress, 0) as string
+    // Get balance in XRP - network call validates that we are connected to the ledger
+    balance = parseFloat(
+      XrpUtils.dropsToXrp((await xrpClient.getBalance(xAddress)).valueOf()),
+    )
+  } catch (err) {
+    // Rethrow xpring-js errors in favor of something more helpful
+    if (err.errorType === XrpErrorType.XAddressRequired) {
+      throw Error(
+        `Invalid classic address. Could not connect to XRPL ${network}.`,
+      )
+    } else if (err.message === 'Http response at 400 or 500 level') {
+      throw Error(
+        `Failed to connect ${grpcUrl}. Is the the right ${network} endpoint?`,
+      )
+    } else {
+      throw err
+    }
+  }
 
-  return [xrpClient, parseFloat(balance)]
+  return [xrpClient, balance]
 }
 
 /**
@@ -238,7 +258,7 @@ export async function reliableBatchPayment(
       index === 0,
     )
     log.info(`Wrote entry to ${txOutputWriteStream.path as string}.`)
-    log.info(black(`  -> ${csvData}`))
+    log.debug(black(`  -> ${csvData}`))
     log.info(green('Transaction successfully validated and recorded.'))
   }
 }

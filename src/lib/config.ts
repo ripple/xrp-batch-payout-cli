@@ -9,7 +9,7 @@ export enum WebGrpcEndpoint {
 }
 
 // Retry limit for reliable send
-export const retryLimit = 3
+export const retryLimit = 10
 
 // An array of questions as accepted by `prompts` to prompt the
 // user for necessary input

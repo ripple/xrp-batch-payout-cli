@@ -9,9 +9,9 @@ const package = require('../package.json')
 const exampleOverrides = {
   // The input CSV path. Should point to a file that contains the receiver's
   // XRP details.
-  inputCsv: "./input.csv",
+  inputCsv: "input.csv",
   // The output CSV path. Will be generated after xrp-batch-payout is complete.
-  outputCsv: "./output.csv",
+  outputCsv: "output.csv",
   // The XRPL network. Either 'testnet' or 'mainnet'.
   network: "mainnet",
   // The web gRPC endpoint for the rippleD node.

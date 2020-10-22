@@ -238,6 +238,10 @@ export async function reliableBatchPayment(
 
     // Only continue if the payment was successful, otherwise throw an error
     await checkPayment(xrpClient, txHash, numRetries)
+    log.info(
+      green('Transaction successfully validated. Your money has been sent.'),
+    )
+    log.info(black(`  -> Tx hash: ${txHash}`))
 
     // Transform transaction input to output
     const txOutput = {

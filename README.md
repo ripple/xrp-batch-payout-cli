@@ -10,7 +10,9 @@ A library and command-line tool for batched, reliable payouts with XRP.
 3. `npm install`
 4. `npm run build`
 
-## Command-Line Usage
+## Usage
+<!-- Add NPM instructions once we open source. -->
+### As a Command-Line Tool
 To run the command line tool:
 1. `cd xrp-batch-payout`
 2. `node bin/index.js`
@@ -44,8 +46,13 @@ Example prompt overrides object:
 }
 ```
 
-## Library Usage
+### As a Library
 This repo is also a library that gives you access to:
 - Generic primitives for reading/parsing/validating I/O from a command-line prompt or file
 - Generic primitives for sending reliable XRP payments, and batch payments
 - Well defined schemas for validation (can easily add your own for custom use cases)
+
+## Documentation
+To see documentation, run the following from within the `xrp-batch-payout` repo:
+1. `npm run generateDocs`
+2. Open `docs/index.html` in a browser.

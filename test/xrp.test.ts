@@ -2,11 +2,10 @@ import fs from 'fs'
 import path from 'path'
 
 import { assert } from 'chai'
-import { ZodError } from 'zod'
+import { XrplNetwork } from 'xpring-common-js'
 
-import { payout } from '../src'
 import { WebGrpcEndpoint } from '../src/lib/config'
-import { connectToLedger } from '../src/lib/xrp'
+import { connectToLedger, generateWallet, submitPayment } from '../src/lib/xrp'
 
 describe('Integration Tests - XRP Logic', function () {
   before(async function () {
@@ -25,82 +24,100 @@ describe('Integration Tests - XRP Logic', function () {
     }
   })
 
-  it('generateWallet - throws on invalid network', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
-    try {
-      await payout(this.overrides)
-    } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
-    }
+  it('generateWallet - throws on invalid secret', async function () {
+    assert.throw(
+      () => {
+        generateWallet('fake_secret', XrplNetwork.Test)
+      },
+      Error,
+      'Failed to generate wallet from secret.',
+    )
   })
 
-  it('generateWallet - throws on invalid classic address', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
+  it('connectToLedger - throws on invalid gRPC url', async function () {
+    const [, address] = generateWallet(this.overrides.secret, XrplNetwork.Test)
     try {
-      await payout(this.overrides)
+      await connectToLedger(
+        'https://thisisnotreal.com',
+        XrplNetwork.Test,
+        address,
+      )
     } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
-    }
-  })
-
-  it('connectToLedger - throws on invalid network', async function () {
-    try {
-      await connectToLedger(WebGrpcEndpoint.Test, 'fake_network', )
-    } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
-    }
-  })
-
-  it('connectToLedger - throws on invalid url', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
-    try {
-      await payout(this.overrides)
-    } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
+      assert(
+        err.message ===
+          'Failed to connect https://thisisnotreal.com. Is the the right testnet endpoint?',
+      )
     }
   })
 
   it('connectToLedger - throws on invalid classic address', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
     try {
-      await payout(this.overrides)
+      await connectToLedger(
+        WebGrpcEndpoint.Test,
+        XrplNetwork.Test,
+        'notvalidaddress',
+      )
     } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
+      assert(
+        err.message ===
+          'Invalid classic address. Could not connect to XRPL testnet.',
+      )
     }
   })
 
   it('submitPayment - handles an exchange rate of 0', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
+    const [wallet, address] = generateWallet(
+      this.overrides.secret,
+      XrplNetwork.Test,
+    )
+    const [xrpClient] = await connectToLedger(
+      WebGrpcEndpoint.Test,
+      XrplNetwork.Test,
+      address,
+    )
     try {
-      await payout(this.overrides)
+      await submitPayment(
+        wallet,
+        xrpClient,
+        {
+          address: 'r3e8EPYLXphCzTFcyrtb7K8Cmyf6CArEyM',
+          destinationTag: 0,
+          usdAmount: 2,
+          name: 'Zero Rate',
+        },
+        0,
+      )
     } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
+      assert.include(err.message, 'xrpToDrops: failed sanity check')
     }
   })
 
-  it('submitPayment - handles a recurring decimal', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
-    try {
-      await payout(this.overrides)
-    } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
-    }
-  })
-
-  it('checkPayment - retries n times on pending transaction', async function () {
-    this.overrides.inputCsv = './file_does_not_exist'
-    try {
-      await payout(this.overrides)
-    } catch (err) {
-      assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
-    }
+  it('submitPayment - handles an exchange rate with a recurring decimal', async function () {
+    const [wallet, address] = generateWallet(
+      this.overrides.secret,
+      XrplNetwork.Test,
+    )
+    const [xrpClient] = await connectToLedger(
+      WebGrpcEndpoint.Test,
+      XrplNetwork.Test,
+      address,
+    )
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- Meant to be a fraction.
+    const recurringDecimal = 1 / 6
+    const txHash = await submitPayment(
+      wallet,
+      xrpClient,
+      {
+        address: 'r3e8EPYLXphCzTFcyrtb7K8Cmyf6CArEyM',
+        destinationTag: 0,
+        usdAmount: 2,
+        name: 'Recurring Decimal',
+      },
+      recurringDecimal,
+    )
+    const payment = await xrpClient.getPayment(txHash)
+    assert(
+      payment?.validated && payment.paymentFields?.amount?.drops === '12000000',
+    )
   })
 })

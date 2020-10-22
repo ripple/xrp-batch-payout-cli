@@ -28,7 +28,7 @@ export function validateObjects<T>(
   const validatedResult: T[] = []
   objects.forEach((account: unknown, index: number) => {
     validatedResult.push(schema.parse(account))
-    log.info(
+    log.debug(
       black(
         `  -> Validated entry ${index + 1} / ${
           objects.length

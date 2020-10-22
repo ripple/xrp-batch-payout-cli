@@ -1,5 +1,5 @@
 {
-  "name": "@ripple/xrp-batch-payout",
+  "name": "xrp-batch-payout",
   "version": "1.0.0",
   "description": "A library and command-line tool for batched, reliable payouts with XRP.",
   "homepage": "https://github.com/ripple/xrp-batch-payout#readme",

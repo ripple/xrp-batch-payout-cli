@@ -3,7 +3,10 @@
 A library and command-line tool for batched, reliable payouts with XRP.
 
 ## Installation
-<!-- Add NPM instructions once we open source. -->
+### NPM
+1. `npm install xrp-batch-payout -g`
+2. `npm update xrp-batch-payout -g` (to pull down updates)
+
 ### Git
 1. `git clone https://github.com/ripple/xrp-batch-payout.git`
 2. `cd xrp-batch-utils`
@@ -13,11 +16,8 @@ A library and command-line tool for batched, reliable payouts with XRP.
 ## Usage
 <!-- Add NPM instructions once we open source. -->
 ### As a Command-Line Tool
-To run the command line tool:
-1. `cd xrp-batch-payout`
-2. `node bin/index.js`
 ```
-Usage: node bin/index.js [options]
+Usage: xrp-batch-payout [options]
 
 Options:
   -V, --version      output the version number
@@ -45,12 +45,19 @@ Example prompt overrides object:
   "confirmed": true
 }
 ```
+#### NPM
+1. `xrp-batch-payout`
+
+#### Git
+1. `cd xrp-batch-payout`
+2. `node bin/index.js`
 
 ### As a Library
 This repo is also a library that gives you access to:
 - Generic primitives for reading/parsing/validating I/O from a command-line prompt or file
 - Generic primitives for sending reliable XRP payments, and batch payments
 - Well defined schemas for validation (can easily add your own for custom use cases)
+All of these functions are exported via `src/index.ts`, and accessible in via Javascript or Typescript.
 
 ## Documentation
 To see documentation, run the following from within the `xrp-batch-payout` repo:

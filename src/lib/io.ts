@@ -84,7 +84,7 @@ export async function parseFromPromptToObject<
     Object.entries(answers).map((val) => trim(val)),
   )
   // We can cast here because we know that the trim function
-  // Doesn't change any types
+  // doesn't change any types
   return trimmedAnswers as T
 }
 

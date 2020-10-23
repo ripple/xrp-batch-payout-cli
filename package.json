@@ -1,10 +1,13 @@
 {
   "name": "xrp-batch-payout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library and command-line tool for batched, reliable payouts with XRP.",
   "homepage": "https://github.com/ripple/xrp-batch-payout#readme",
   "bugs": {
     "url": "https://github.com/ripple/xrp-batch-payout/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
   },
   "repository": {
     "type": "git",

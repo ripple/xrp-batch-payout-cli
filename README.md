@@ -59,7 +59,8 @@ This repo is also a library/npm module that gives you access to:
 - Generic primitives for reading/parsing/validating I/O from a command-line prompt or file
 - Generic primitives for sending reliable XRP payments, and batch payments
 - Well defined schemas for validation (can easily add your own for custom use cases)
-  All of these functions are exported via `src/index.ts`, and accessible in via Javascript or Typescript.
+
+All of these functions are exported via `src/index.ts`, and accessible in via Javascript or Typescript.
 
 ## Features
 

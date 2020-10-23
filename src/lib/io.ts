@@ -8,6 +8,19 @@ import * as z from 'zod'
 import { validateObjects } from './schema'
 
 /**
+ * Trims a string if passed in. Identity function otherwise.
+ *
+ * @param val - The string to trim.
+ * @returns The trimmed string.
+ */
+function trim<T>(val: T): T {
+  if (typeof val === 'string') {
+    ;(val as string).trim()
+  }
+  return val
+}
+
+/**
  * Parse CSV to an array of objects and validate against a schema.
  *
  * @param stream - A read stream.
@@ -26,6 +39,7 @@ export async function parseFromCsvToArray<T>(
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
+      transform: trim,
       complete,
       error,
     })
@@ -51,7 +65,9 @@ export async function parseFromCsvToArray<T>(
  * @returns Object containing user-inputted answers to questions.
  * @throws Error if answers cannot be parsed against the schema.
  */
-export async function parseFromPromptToObject<T>(
+export async function parseFromPromptToObject<
+  T extends Record<string, unknown>
+>(
   questions: prompts.PromptObject[],
   schema: z.Schema<T>,
   preAnswers?: unknown,
@@ -64,8 +80,12 @@ export async function parseFromPromptToObject<T>(
   // If user answers prompt questions, parse them against a schema
   // to check for valid inputs
   const answers = schema.parse(await prompts(questions))
-
-  return answers
+  const trimmedAnswers = Object.fromEntries(
+    Object.entries(answers).map((val) => trim(val)),
+  )
+  // We can cast here because we know that the trim function
+  // doesn't change any types
+  return trimmedAnswers as T
 }
 
 /**

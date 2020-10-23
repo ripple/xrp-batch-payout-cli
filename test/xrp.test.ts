@@ -117,7 +117,7 @@ describe('Integration Tests - XRP Logic', function () {
     )
     const payment = await xrpClient.getPayment(txHash)
     assert(
-      payment?.validated && payment.paymentFields?.amount?.drops === '12000000',
+      payment.validated && payment.paymentFields?.amount.drops === '12000000',
     )
   })
 })

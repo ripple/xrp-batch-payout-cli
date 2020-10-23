@@ -177,7 +177,6 @@ export async function checkPayment(
     await checkPayment(xrpClient, txHash, newIndex, retryLimit)
   } else if (
     txStatus === TransactionStatus.Failed ||
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- Choosing to be verbose about status.
     txStatus === TransactionStatus.Unknown
   ) {
     throw Error('Transaction failed.')

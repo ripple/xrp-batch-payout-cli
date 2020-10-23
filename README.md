@@ -3,12 +3,15 @@
 A library and command-line tool for batched, reliable payouts with XRP.
 
 ## Getting Started
+
 ### NPM (recommended)
+
 1. `npm install xrp-batch-payout -g` (as a command-line tool)
-  1. OR `npm install xrp-batch-payout` (as a library for an existing project)
-2. `xrp-batch-payout` (run command-line tool)
+1. OR `npm install xrp-batch-payout` (as a library for an existing project)
+1. `xrp-batch-payout` (run command-line tool)
 
 ### Git (for development)
+
 1. `git clone https://github.com/ripple/xrp-batch-payout.git`
 2. `cd xrp-batch-utils`
 3. `npm install`
@@ -16,7 +19,9 @@ A library and command-line tool for batched, reliable payouts with XRP.
 5. `node bin/index.js` (run comand-line tool)
 
 ## Usage
+
 ### As a Command-Line Tool
+
 ```
 Usage: xrp-batch-payout [options]
 
@@ -48,13 +53,16 @@ Example prompt overrides object:
 ```
 
 ### As a Library
+
 This repo is also a library/npm module that gives you access to:
+
 - Generic primitives for reading/parsing/validating I/O from a command-line prompt or file
 - Generic primitives for sending reliable XRP payments, and batch payments
 - Well defined schemas for validation (can easily add your own for custom use cases)
-All of these functions are exported via `src/index.ts`, and accessible in via Javascript or Typescript.
+  All of these functions are exported via `src/index.ts`, and accessible in via Javascript or Typescript.
 
 ## Features
+
 - Guaranteed success for each payment, or application exits, so there can be no non-sequential partial successes
   - If a payment succeeds (both validated by the ledger and successful), the payment is recorded to the output file, and the batch payout continues
   - If a payment fails, the application exits, and the output for that payment is not recorded to the output file
@@ -63,6 +71,8 @@ All of these functions are exported via `src/index.ts`, and accessible in via Ja
   - Minimizes chances of payment failure due to validation error by failing fast
 
 ## Documentation
+
 To see library/code documentation, run the following from within the `xrp-batch-payout` repo:
+
 1. `npm run generateDocs`
 2. Open `docs/index.html` in a browser.

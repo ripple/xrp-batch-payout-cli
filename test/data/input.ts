@@ -17,7 +17,7 @@ const inputArray = [
   {
     address: 'rUPC5CeGrApqBGQmt5xW7dNj31nB4GNv7W',
     destinationTag: 0,
-    usdAmount: 1,
+    usdAmount: 6,
     name: 'Keanu R.',
   },
 ]

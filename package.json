@@ -6,9 +6,6 @@
   "bugs": {
     "url": "https://github.com/ripple/xrp-batch-payout/issues"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.com/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ripple/xrp-batch-payout.git"

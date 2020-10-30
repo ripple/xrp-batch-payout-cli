@@ -88,7 +88,7 @@ describe('Integration Tests - XRP Logic', function () {
         0,
       )
     } catch (err) {
-      assert.include(err.message, 'xrpToDrops: failed sanity check')
+      assert.include(err.message, "xrpToDrops: invalid value 'Infinity'")
     }
   })
 

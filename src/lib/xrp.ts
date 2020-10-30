@@ -126,7 +126,8 @@ export async function submitPayment(
     destinationClassicAddress,
     destinationTag ?? undefined,
   ) as string
-  const xrpDestinationAmount = (usdAmount / usdToXrpRate).toFixed(6)
+  const xrpPrecision = 6
+  const xrpDestinationAmount = (usdAmount / usdToXrpRate).toFixed(xrpPrecision)
   const dropDestinationAmount = XrpUtils.xrpToDrops(xrpDestinationAmount)
 
   // Submit payment

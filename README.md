@@ -13,7 +13,7 @@ A library and command-line tool for batched, reliable payouts with XRP.
 ### Git (for development)
 
 1. `git clone https://github.com/ripple/xrp-batch-payout.git`
-2. `cd xrp-batch-utils`
+2. `cd xrp-batch-payout`
 3. `npm install`
 4. `npm run build`
 5. `node bin/index.js` (run comand-line tool)

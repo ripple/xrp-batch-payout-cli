@@ -222,9 +222,10 @@ export async function reliableBatchPayment(
     log.info(black(`  -> Destination tag: ${txInput.destinationTag ?? 'null'}`))
     log.info(
       black(
-        `  -> Amount: ${txInput.usdAmount / usdToXrpRate} XRP valued at $${
-          txInput.usdAmount
-        }`,
+        `  -> Amount: ${
+          // eslint-disable-next-line @typescript-eslint/no-magic-numbers -- XRP precision.
+          (txInput.usdAmount / usdToXrpRate).toFixed(6)
+        } XRP valued at $${txInput.usdAmount}`,
       ),
     )
     const txHash = await submitPayment(

@@ -13,9 +13,12 @@ import { validateObjects } from './schema'
  * @param val - The string to trim.
  * @returns The trimmed string.
  */
-function trim<T>(val: T): T {
+function trimAndNull<T>(val: T): T | null {
   if (typeof val === 'string') {
     ;(val as string).trim()
+    if (val === 'null') {
+      return null
+    }
   }
   return val
 }
@@ -39,7 +42,7 @@ export async function parseFromCsvToArray<T>(
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
-      transform: trim,
+      transform: trimAndNull,
       complete,
       error,
     })
@@ -74,14 +77,14 @@ export async function parseFromPromptToObject<
 ): Promise<T> {
   // If the user supplies pre-answers, parse them against a schema to
   // check for valid inputs and override to avoid prompt questions
-  if (preAnswers) {
-    prompts.override(schema.parse(preAnswers))
+  if (preAnswers && typeof preAnswers === 'object') {
+    prompts.override(preAnswers)
   }
   // If user answers prompt questions, parse them against a schema
   // to check for valid inputs
   const answers = schema.parse(await prompts(questions))
   const trimmedAnswers = Object.fromEntries(
-    Object.entries(answers).map((val) => trim(val)),
+    Object.entries(answers).map((val) => trimAndNull(val) as never),
   )
   // We can cast here because we know that the trim function
   // doesn't change any types

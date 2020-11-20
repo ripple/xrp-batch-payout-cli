@@ -8,7 +8,8 @@ import * as z from 'zod'
 import { validateObjects } from './schema'
 
 /**
- * Trims a string if passed in. Identity function otherwise.
+ * Trims a string if passed in, and if the string is 'null',
+ * it transforms it to the null value. Identity function otherwise.
  *
  * @param val - The string to trim.
  * @returns The trimmed string.

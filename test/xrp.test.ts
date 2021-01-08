@@ -43,9 +43,9 @@ describe('Integration Tests - XRP Logic', function () {
         address,
       )
     } catch (err) {
-      assert(
-        err.message ===
-          'Failed to connect https://thisisnotreal.com. Is the the right testnet endpoint?',
+      assert.strictEqual(
+        err.message,
+        'Failed to connect https://thisisnotreal.com. Is the the right testnet endpoint?',
       )
     }
   })
@@ -93,6 +93,10 @@ describe('Integration Tests - XRP Logic', function () {
   })
 
   it('submitPayment - handles an exchange rate with a recurring decimal', async function () {
+    // Increase the timeout because this test could take a while
+    const timeout = 20000
+    this.timeout(timeout)
+
     const [wallet, address] = generateWallet(
       this.overrides.secret,
       XrplNetwork.Test,

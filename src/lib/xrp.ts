@@ -53,7 +53,7 @@ export async function connectToLedger(
       throw Error(
         `Invalid classic address. Could not connect to XRPL ${network}.`,
       )
-    } else if (err.message === 'Http response at 400 or 500 level') {
+    } else if (err.message === 'Http response at 400 or 500 level' || err.message === 'Unknown Content-type received.') {
       throw Error(
         `Failed to connect ${grpcUrl}. Is the the right ${network} endpoint?`,
       )

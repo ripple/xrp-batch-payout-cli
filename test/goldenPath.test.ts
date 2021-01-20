@@ -37,7 +37,7 @@ describe('Integration Tests -- Golden Path', function () {
 
   it('Successfully completes the batch payout with valid inputs', async function () {
     // Increase the timeout because this is a long test
-    const timeout = 30000
+    const timeout = 60000
     this.timeout(timeout)
 
     // Run the batch payout script

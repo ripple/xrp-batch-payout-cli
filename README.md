@@ -16,7 +16,7 @@ A library and command-line tool for batched, reliable payouts with XRP.
 2. `cd xrp-batch-payout`
 3. `npm install`
 4. `npm run build`
-5. `node bin/index.js` (run comand-line tool)
+5. `node bin/index.js` (run command-line tool)
 
 ## Usage
 

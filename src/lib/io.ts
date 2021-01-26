@@ -14,12 +14,13 @@ import { validateObjects } from './schema'
  * @param val - The string to trim.
  * @returns The trimmed string.
  */
-function trimAndNull<T>(val: T): T | null {
+function trimAndNull<T>(val: T): T | null | string {
   if (typeof val === 'string') {
     ;(val as string).trim()
     if (val.toLowerCase() === 'null') {
       return null
-    }
+    } 
+    return val.trim()
   }
   return val
 }

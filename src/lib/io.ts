@@ -17,7 +17,7 @@ import { validateObjects } from './schema'
 function trimAndNull<T>(val: T): T | null {
   if (typeof val === 'string') {
     ;(val as string).trim()
-    if (val === 'null') {
+    if (val.toLowerCase() === 'null') {
       return null
     }
   }

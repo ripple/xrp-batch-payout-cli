@@ -78,7 +78,7 @@ export const senderInputSchema = z.object({
       message: `Output CSV already exists.`,
     }),
   network: z.nativeEnum(XrplNetwork),
-  grpcUrl: z.string().url(),
+  serverUrl: z.string().url(),
   maxFee: z.number().positive(),
   usdToXrpRate: z.number().positive(),
   secret: z.string().nonempty(),

@@ -38,7 +38,7 @@ export const questions: prompts.PromptObject[] = [
   },
   {
     type: 'text',
-    name: 'grpcUrl',
+    name: 'serverUrl',
     message: 'Web gRPC URL of the rippleD node?',
     initial: WebSocketEndpoint.Main,
   },

@@ -34,7 +34,7 @@ Prompt overrides help:
   inputCsv - The input CSV path. Should point to a file that contains the receiver's XRP details.
   outputCsv - The output CSV path. Will be generated after xrp-batch-payout is complete.
   network - The XRPL network. Either 'testnet' or 'mainnet'.
-  grpcUrl - The web gRPC endpoint for the rippleD node.
+  serverUrl - The web gRPC endpoint for the rippleD node.
   usdToXrpRate - The price of 1 XRP in USD.
   secret - The XRP wallet seed. Used to generate an ephemeral wallet to locally sign transactions.
   confirmed - The confirmation status. Indicates whether to start or cancel the payout.
@@ -44,7 +44,7 @@ Example prompt overrides object:
   "inputCsv": "input.csv",
   "outputCsv": "output.csv",
   "network": "mainnet",
-  "grpcUrl": "https://envoy.main.xrp.xpring.io",
+  "serverUrl": "https://s1.ripple.com",
   "maxFee": 0.01,
   "usdToXrpRate": 0.25,
   "secret": "shBfYr5iEzQWJkCraTESe2FeiPo4e",

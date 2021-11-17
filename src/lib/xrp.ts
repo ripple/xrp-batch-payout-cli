@@ -43,17 +43,21 @@ async function reliableBatchPayment(
     log.info(black(`  -> Name: ${txInput.name}`))
     log.info(black(`  -> Receiver classic address: ${txInput.address}`))
     log.info(black(`  -> Destination tag: ${txInput.destinationTag ?? 'null'}`))
-    // const xrpPrecision = 6
+    const xrpPrecision = 6
+    const amountInDrops = xrpToDrops(
+      (txInput.usdAmount / usdToXrpRate)
+      .toFixed(xrpPrecision)
+    )
     log.info(
       black(
-        `  -> Amount: ${xrpToDrops(txInput.usdAmount / usdToXrpRate)} XRP valued at $${txInput.usdAmount}`,
+        `  -> Amount: ${amountInDrops} XRP valued at $${txInput.usdAmount}`,
       ),
     )
 
     const paymentTx: Payment = {
       TransactionType: 'Payment',
       Account: senderWallet.classicAddress,
-      Amount: xrpToDrops(txInput.usdAmount / usdToXrpRate),
+      Amount: amountInDrops,
       Destination: txInput.address,
     }
     if(txInput.destinationTag){

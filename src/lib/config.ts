@@ -1,6 +1,7 @@
 // Application configuration - defaults are recommended
 import prompts from 'prompts'
-import { XrplNetwork } from 'xpring-js'
+
+import { XrplNetwork } from './schema'
 
 // Web gRPC rippleD node endpoints hosted by RippleX
 export enum WebSocketEndpoint {

@@ -66,7 +66,7 @@ export default async function payout(override?: unknown): Promise<void> {
     
     log.info(green(`Connected to XRPL ${senderInput.network}.`))
     log.info(
-      black(`  -> RippleD node web gRPC endpoint: ${senderInput.serverUrl}`),
+      black(`  -> RippleD node WebSocket endpoint: ${senderInput.serverUrl}`),
     )
 
     const client = new Client(senderInput.serverUrl)

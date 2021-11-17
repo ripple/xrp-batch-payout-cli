@@ -3,9 +3,9 @@ import prompts from 'prompts'
 import { XrplNetwork } from 'xpring-js'
 
 // Web gRPC rippleD node endpoints hosted by RippleX
-export enum WebGrpcEndpoint {
-  Main = 'https://envoy.main.xrp.xpring.io',
-  Test = 'https://envoy.test.xrp.xpring.io',
+export enum WebSocketEndpoint {
+  Main = 'https://s1.ripple.com',
+  Test = 'wss://s.altnet.rippletest.net:51233',
 }
 
 // Retry limit for reliable send
@@ -40,7 +40,7 @@ export const questions: prompts.PromptObject[] = [
     type: 'text',
     name: 'grpcUrl',
     message: 'Web gRPC URL of the rippleD node?',
-    initial: WebGrpcEndpoint.Main,
+    initial: WebSocketEndpoint.Main,
   },
   {
     type: 'number',

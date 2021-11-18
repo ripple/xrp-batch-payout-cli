@@ -3,10 +3,10 @@ import prompts from 'prompts'
 
 import { XrplNetwork } from './schema'
 
-// Web gRPC rippleD node endpoints hosted by RippleX
+// WebSocket rippleD node endpoints hosted by RippleX
 export enum WebSocketEndpoint {
-  Main = 'https://s1.ripple.com',
-  Test = 'wss://s.altnet.rippletest.net:51233',
+  Main = 'wss://s1.ripple.com',
+  Test = 'wss://s.altnet.rippletest.net',
 }
 
 // Retry limit for reliable send

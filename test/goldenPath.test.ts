@@ -18,12 +18,12 @@ describe('Integration Tests -- Golden Path', function () {
       (await fs.promises.readFile(overridePath)).toString(),
     )
 
-    const [secret, balance, xrpNetworkClient] = await getTestnetAccount(this)
+    const [secret, balance, client] = await getTestnetAccount(this)
 
     // Set the funded testnet account secret
     // Keep the balance and network client for tests
     this.testBalance = balance
-    this.xrpNetworkClient = xrpNetworkClient
+    this.client = client
     this.overrides.secret = secret
   })
 
@@ -58,7 +58,7 @@ describe('Integration Tests -- Golden Path', function () {
         usdToXrpRate: this.overrides.usdToXrpRate,
         transactionHash: txHash,
       })
-      const txResponse = await this.xrpNetworkClient.request({
+      const txResponse = await this.client.request({
         command: 'tx',
         transaction: txHash,
       })

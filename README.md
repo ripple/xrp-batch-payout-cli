@@ -49,7 +49,7 @@ Example prompt overrides object:
   "inputCsv": "input.csv",
   "outputCsv": "output.csv",
   "network": "mainnet",
-  "serverUrl": "https://s1.ripple.com",
+  "serverUrl": "wss://s1.ripple.com",
   "maxFee": 0.01,
   "usdToXrpRate": 0.25,
   "secret": "shBfYr5iEzQWJkCraTESe2FeiPo4e",

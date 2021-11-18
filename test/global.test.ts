@@ -1,8 +1,8 @@
 import { Context } from 'mocha'
 import fetch from 'node-fetch'
-import { XrpClient, XrplNetwork } from 'xpring-js'
+import { Client } from 'xrpl'
 
-import { xrp, log, config } from '../src/index'
+import { log, config } from '../src/index'
 import { SenderInput } from '../src/lib/schema'
 
 // Types for our Mocha globals
@@ -10,7 +10,7 @@ declare module 'mocha' {
   export interface Context {
     overrides: SenderInput
     testBalance: number
-    xrpNetworkClient: XrpClient
+    xrpNetworkClient: Client
   }
 }
 
@@ -23,7 +23,7 @@ declare module 'mocha' {
  */
 export async function getTestnetAccount(
   ctx: Context,
-): Promise<[string, number, XrpClient]> {
+): Promise<[string, number, Client]> {
   // Increase the timeout because we need to fund a testnet account
   const testTimeout = 15000
   ctx.timeout(testTimeout)
@@ -47,16 +47,18 @@ export async function getTestnetAccount(
   await new Promise((resolve) => setTimeout(resolve, waitTime))
 
   // Make sure it's funded
-  const [xrpNetworkClient, balance] = await xrp.connectToLedger(
-    config.WebGrpcEndpoint.Test,
-    XrplNetwork.Test,
-    address,
-  )
+  const client = new Client(config.WebSocketEndpoint.Test)
+  await client.connect()
+
+  const balance = Number(await client.getXrpBalance(address))
+
+  await client.disconnect()
+
   const fundAmount = 1000
   if (balance !== fundAmount) {
     throw Error('Failed to fund testnet account.')
   }
   log.info('Successfully funded testnet account.')
 
-  return [secret, balance, xrpNetworkClient]
+  return [secret, balance, client]
 }

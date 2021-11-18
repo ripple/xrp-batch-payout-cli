@@ -1,11 +1,12 @@
 // Application configuration - defaults are recommended
 import prompts from 'prompts'
-import { XrplNetwork } from 'xpring-js'
 
-// Web gRPC rippleD node endpoints hosted by RippleX
-export enum WebGrpcEndpoint {
-  Main = 'https://envoy.main.xrp.xpring.io',
-  Test = 'https://envoy.test.xrp.xpring.io',
+import { XrplNetwork } from './schema'
+
+// WebSocket rippleD node endpoints hosted by RippleX
+export enum WebSocketEndpoint {
+  Main = 'wss://s1.ripple.com',
+  Test = 'wss://s.altnet.rippletest.net',
 }
 
 // Retry limit for reliable send
@@ -38,9 +39,9 @@ export const questions: prompts.PromptObject[] = [
   },
   {
     type: 'text',
-    name: 'grpcUrl',
+    name: 'serverUrl',
     message: 'Web gRPC URL of the rippleD node?',
-    initial: WebGrpcEndpoint.Main,
+    initial: WebSocketEndpoint.Main,
   },
   {
     type: 'number',

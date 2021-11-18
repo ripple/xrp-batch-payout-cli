@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { assert } from 'chai'
-import { ZodError } from 'zod'
+import { ZodError, ZodUnrecognizedKeysError } from 'zod'
 
 import { payout } from '../src'
 
@@ -32,7 +32,9 @@ describe('Integration Tests - Input Validation', function () {
       await payout(this.overrides)
     } catch (err) {
       assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'inputCsv')
+      if (err instanceof ZodError) {
+        assert(err.errors[0].path[0] === 'inputCsv')
+      }
     }
   })
 
@@ -49,7 +51,9 @@ describe('Integration Tests - Input Validation', function () {
       await payout(this.overrides)
     } catch (err) {
       assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'address')
+      if (err instanceof ZodError) {
+        assert(err.errors[0].path[0] === 'address')
+      }
     }
   })
 
@@ -66,7 +70,9 @@ describe('Integration Tests - Input Validation', function () {
       await payout(this.overrides)
     } catch (err) {
       assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'name')
+      if (err instanceof ZodError) {
+        assert(err.errors[0].path[0] === 'name')
+      }
     }
   })
 
@@ -83,7 +89,9 @@ describe('Integration Tests - Input Validation', function () {
       await payout(this.overrides)
     } catch (err) {
       assert(err instanceof ZodError)
-      assert(err.errors[0].path[0] === 'destinationTag')
+      if (err instanceof ZodError) {
+        assert(err.errors[0].path[0] === 'destinationTag')
+      }
     }
   })
 
@@ -100,9 +108,14 @@ describe('Integration Tests - Input Validation', function () {
       await payout(this.overrides)
     } catch (err) {
       assert(err instanceof ZodError)
-      assert(err.errors[0].code === 'unrecognized_keys')
-      assert(err.errors[0].keys[0] === 'destinationTg')
-      assert(err.errors[1].path[0] === 'destinationTag')
+      if (err instanceof ZodError) {
+        assert(err.errors[0].code === 'unrecognized_keys')
+        assert(
+          (err.errors[0] as ZodUnrecognizedKeysError).keys[0] ===
+            'destinationTg',
+        )
+        assert(err.errors[1].path[0] === 'destinationTag')
+      }
     }
   })
 })

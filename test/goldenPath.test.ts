@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { assert } from 'chai'
-import { TransactionStatus } from 'xpring-js'
+import { TransactionMetadata } from 'xrpl'
 
 import { io, payout } from '../src'
 import { txOutputSchema } from '../src/lib/schema'
@@ -18,12 +18,12 @@ describe('Integration Tests -- Golden Path', function () {
       (await fs.promises.readFile(overridePath)).toString(),
     )
 
-    const [secret, balance, xrpNetworkClient] = await getTestnetAccount(this)
+    const [secret, balance, client] = await getTestnetAccount(this)
 
     // Set the funded testnet account secret
     // Keep the balance and network client for tests
     this.testBalance = balance
-    this.xrpNetworkClient = xrpNetworkClient
+    this.client = client
     this.overrides.secret = secret
   })
 
@@ -51,18 +51,22 @@ describe('Integration Tests -- Golden Path', function () {
 
     // Confirm the output values are what we expect
     // And that all transactions were successful
-    const pendingStatuses = validatedOutput.map(async (output, index) => {
+    validatedOutput.map(async (output, index) => {
       const txHash = output.transactionHash
       assert.deepStrictEqual(output, {
         ...inputArray[index],
         usdToXrpRate: this.overrides.usdToXrpRate,
         transactionHash: txHash,
       })
-      return this.xrpNetworkClient.getPaymentStatus(txHash)
-    })
-    const resolvedStatuses = await Promise.all(pendingStatuses)
-    resolvedStatuses.map((status) => {
-      return assert(status === TransactionStatus.Succeeded)
+      const txResponse = await this.client.request({
+        command: 'tx',
+        transaction: txHash,
+      })
+      assert(txResponse.result.validated)
+      assert.equal(
+        (txResponse.result.meta as TransactionMetadata).TransactionResult,
+        'tesSUCCESS',
+      )
     })
   })
 })

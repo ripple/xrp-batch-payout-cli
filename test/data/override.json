@@ -2,7 +2,7 @@
   "inputCsv": "./test/data/input.csv",
   "outputCsv": "./test/data/output.csv",
   "network": "testnet",
-  "grpcUrl": "https://envoy.test.xrp.xpring.io",
+  "serverUrl": "wss://s.altnet.rippletest.net",
   "maxFee": 0.01,
   "usdToXrpRate": 0.238323,
   "secret": "shBfYr5iEzQWJkCraTESe2FeiPo4e",

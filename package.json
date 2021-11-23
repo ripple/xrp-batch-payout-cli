@@ -43,7 +43,7 @@
     "@arkweid/lefthook": "^0.7.2",
     "@fintechstudios/eslint-plugin-chai-as-promised": "^3.0.2",
     "@types/chai": "^4.2.14",
-    "@types/google-protobuf": "^3.7.3",
+    "@types/google-protobuf": "^3.15.5",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.14.22",
     "@types/node-fetch": "^2.5.8",

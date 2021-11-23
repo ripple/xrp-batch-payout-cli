@@ -1,6 +1,6 @@
 {
   "name": "xrp-batch-payout",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "A library and command-line tool for batched, reliable payouts with XRP.",
   "homepage": "https://github.com/ripple/xrp-batch-payout#readme",
   "bugs": {
@@ -11,7 +11,6 @@
     "url": "git+https://github.com/ripple/xrp-batch-payout.git"
   },
   "license": "Apache-2.0",
-  "author": "Dino Rodriguez",
   "main": "build/src/index.js",
   "types": "build/index.d.ts",
   "bin": "./bin/index.js",
@@ -23,8 +22,7 @@
   "scripts": {
     "build": "rm -rf build && tsc --project .",
     "buildWatch": "rm -rf build && tsc --watch --project .",
-    "fullBuild": "npm run lintNoFix && npm run build && npm run test && generateDocs",
-    "generateDocs": "typedoc --name xrp-batch-payout --out ./docs ./src",
+    "fullBuild": "npm run lintNoFix && npm run build && npm run test",
     "lint": "eslint . --ext .ts --fix --max-warnings 0 && prettier --write '**/*.{md,json}'",
     "lintNoFix": "eslint . --ext .ts --max-warnings 0 && prettier --check '**/*.{md,json}'",
     "lintWatch": "chokidar src/**/*.ts -c \"npm run lint\" --initial --verbose",
@@ -71,7 +69,6 @@
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "ts-node": "^9.0.0",
-    "typedoc": "^0.19.2",
     "typescript": "^3.9.5"
   },
   "engines": {

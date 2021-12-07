@@ -31,16 +31,13 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "commander": "^6.2.0",
     "papaparse": "^5.3.0",
     "prompts": "^2.4.2",
     "tslog": "^3.2.2",
-    "xpring-common-js": "^6.2.2",
     "xrpl": "^2.0.2",
     "zod": "^1.11.11"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.2",
     "@fintechstudios/eslint-plugin-chai-as-promised": "^3.0.2",
     "@types/chai": "^4.2.14",
     "@types/google-protobuf": "^3.7.3",

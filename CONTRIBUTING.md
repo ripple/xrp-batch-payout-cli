@@ -11,5 +11,5 @@ Development Guide for xrp-batch-payout app.
 Note:
 If you have issues running tests and find `nyc: command not found`, it would be
 worth installing `nyc` globally, eg. `npm i -g nyc` and similar approach would
-work for other dependencies as well and the ones which error out with 
+work for other dependencies as well and the ones which error out with
 `Error: spawn $lib ENOENT`.

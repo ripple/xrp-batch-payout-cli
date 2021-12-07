@@ -30,7 +30,6 @@
     "testWatch": "nyc mocha --watch 'test/**/*.test.ts'"
   },
   "dependencies": {
-    "@arkweid/lefthook": "^0.7.7",
     "chalk": "^4.1.0",
     "papaparse": "^5.3.0",
     "prompts": "^2.3.2",
@@ -39,6 +38,7 @@
     "zod": "^1.11.11"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.7.7",
     "@fintechstudios/eslint-plugin-chai-as-promised": "^3.0.2",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",

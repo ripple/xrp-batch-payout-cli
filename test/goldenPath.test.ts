@@ -8,7 +8,9 @@ import { io, payout } from '../src'
 import { txOutputSchema } from '../src/lib/schema'
 
 import inputArray from './data/input'
-import { getTestnetAccount } from './global.test'
+
+import { Client } from 'xrpl'
+import { log, config } from '../src/index'
 
 describe('Integration Tests -- Golden Path', function () {
   before(async function () {
@@ -18,13 +20,19 @@ describe('Integration Tests -- Golden Path', function () {
       (await fs.promises.readFile(overridePath)).toString(),
     )
 
-    const [secret, balance, client] = await getTestnetAccount(this)
+    // Initialize client
+    const client = new Client(config.WebSocketEndpoint.Test)
+    await client.connect()
 
-    // Set the funded testnet account secret
+    // Fetch acccount
+    log.info('Getting funded testnet account..')
+    const { balance } = await client.fundWallet()
+
     // Keep the balance and network client for tests
     this.testBalance = balance
     this.client = client
-    this.overrides.secret = secret
+
+    await client.disconnect()
   })
 
   beforeEach(async function () {

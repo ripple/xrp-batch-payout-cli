@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention -- Payment object expects fields as they are. */
 /* eslint-disable max-lines-per-function -- Triggered by log statements, so we ignore this. */
 /* eslint-disable no-await-in-loop -- We want sequential execution when submitting the XRP payments in reliableBatchPayment. */
 // XRP logic - connect to XRPL and reliably send a payment

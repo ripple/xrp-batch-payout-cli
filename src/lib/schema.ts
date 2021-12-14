@@ -73,12 +73,14 @@ export const senderInputSchema = z.object({
   inputCsv: z
     .string()
     .nonempty()
+    // eslint-disable-next-line node/no-sync -- Synchronous call works here.
     .refine((val) => fs.existsSync(val), {
       message: `Input CSV does not exist.`,
     }),
   outputCsv: z
     .string()
     .nonempty()
+    // eslint-disable-next-line node/no-sync -- Synchronous call works here.
     .refine((val) => !fs.existsSync(val), {
       message: `Output CSV already exists.`,
     }),

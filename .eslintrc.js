@@ -21,6 +21,10 @@ module.exports = {
   },
 
   plugins: [],
+  extends: [
+    '@xpring-eng/eslint-config-mocha',
+    '@xpring-eng/eslint-config-base/loose',
+  ],
 
   rules: {
     'import/no-unused-modules': 'off',

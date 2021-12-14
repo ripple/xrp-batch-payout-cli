@@ -37,6 +37,7 @@ describe('Integration Tests -- Golden Path', function () {
 
   beforeEach(async function () {
     // Remove the output CSV if it exists
+    // eslint-disable-next-line node/no-sync -- This method is not deprecated anymore, we expect this to be synchronous.
     if (fs.existsSync(this.overrides.outputCsv)) {
       await fs.promises.unlink(this.overrides.outputCsv)
     }

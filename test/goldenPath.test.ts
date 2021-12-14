@@ -2,15 +2,12 @@ import fs from 'fs'
 import path from 'path'
 
 import { assert } from 'chai'
-import { TransactionMetadata } from 'xrpl'
+import { TransactionMetadata, Client } from 'xrpl'
 
-import { io, payout } from '../src'
+import { io, payout, log, config } from '../src'
 import { txOutputSchema } from '../src/lib/schema'
 
 import inputArray from './data/input'
-
-import { Client } from 'xrpl'
-import { log, config } from '../src/index'
 
 describe('Integration Tests -- Golden Path', function () {
   before(async function () {

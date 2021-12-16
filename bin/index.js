@@ -10,7 +10,7 @@ const exampleOverrides = {
   // The input CSV path. Should point to a file that contains the receiver's
   // XRP details.
   inputCsv: "input.csv",
-  // The output CSV path. Will be generated after xrp-batch-payout is complete.
+  // The output CSV path. Will be generated after xrp-batch-payout-cli is complete.
   outputCsv: "output.csv",
   // The XRPL network. Either 'testnet' or 'mainnet'.
   network: "mainnet",
@@ -40,7 +40,7 @@ program
     console.log('')
     console.log('Prompt overrides help:')
     console.log('  inputCsv - The input CSV path. Should point to a file that contains the receiver\'s XRP details.')
-    console.log('  outputCsv - The output CSV path. Will be generated after xrp-batch-payout is complete.')
+    console.log('  outputCsv - The output CSV path. Will be generated after xrp-batch-payout-cli is complete.')
     console.log('  network - The XRPL network. Either \'testnet\' or \'mainnet\'.')
     console.log('  grpcUrl - The web gRPC endpoint for the rippleD node.')
     console.log('  usdToXrpRate - The price of 1 XRP in USD.')

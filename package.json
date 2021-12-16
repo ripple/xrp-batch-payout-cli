@@ -25,7 +25,6 @@
     "fullBuild": "npm run lintNoFix && npm run build && npm run test",
     "lint": "eslint . --ext .ts --fix --max-warnings 0 && prettier --write '**/*.{md,json}'",
     "lintNoFix": "eslint . --ext .ts --max-warnings 0 && prettier --check '**/*.{md,json}'",
-    "lintWatch": "chokidar src/**/*.ts -c \"npm run lint\" --initial --verbose",
     "test": "nyc mocha 'test/**/*.test.ts'",
     "testWatch": "nyc mocha --watch 'test/**/*.test.ts'"
   },
@@ -50,7 +49,6 @@
     "@xpring-eng/eslint-config-base": "^0.11.0",
     "@xpring-eng/eslint-config-mocha": "^1.0.0",
     "chai": "^4.3.4",
-    "chokidar-cli": "^2.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-array-func": "^3.1.6",
     "eslint-plugin-eslint-comments": "^3.2.0",

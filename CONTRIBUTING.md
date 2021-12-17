@@ -1,9 +1,9 @@
-Development Guide for xrp-batch-payout app.
+Development Guide for xrp-batch-payout-cli app.
 
 ### Git (for development)
 
-1. `git clone https://github.com/ripple/xrp-batch-payout.git`
-2. `cd xrp-batch-payout`
+1. `git clone https://github.com/ripple/xrp-batch-payout-cli.git`
+2. `cd xrp-batch-payout-cli`
 3. `npm install`
 4. `npm run build`
 5. `node bin/index.js` (run command-line tool)

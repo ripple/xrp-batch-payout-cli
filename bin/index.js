@@ -42,7 +42,7 @@ program
     console.log('  inputCsv - The input CSV path. Should point to a file that contains the receiver\'s XRP details.')
     console.log('  outputCsv - The output CSV path. Will be generated after xrp-batch-payout-cli is complete.')
     console.log('  network - The XRPL network. Either \'testnet\' or \'mainnet\'.')
-    console.log('  serverUrl - The webscoket endpoint for the rippleD node.')
+    console.log('  serverUrl - The websocket endpoint for the rippleD node.')
     console.log('  usdToXrpRate - The price of 1 XRP in USD.')
     console.log('  secret - The XRP wallet seed. Used to generate an ephemeral wallet to locally sign transactions.')
     console.log('  confirmed - The confirmation status. Indicates whether to start or cancel the payout.')

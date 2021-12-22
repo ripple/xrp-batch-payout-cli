@@ -15,13 +15,13 @@ const exampleOverrides = {
   // The XRPL network. Either 'testnet' or 'mainnet'.
   network: "mainnet",
   // The web gRPC endpoint for the rippleD node.
-  grpcUrl: "https://envoy.main.xrp.xpring.io",
+  serverUrl: "wss://s1.ripple.com/",
   // The max fee to allow for a transaction (this is a ceiling, not the actual
   // fee consumed in most cases).
   maxFee: 0.01,
   // The price of 1 XRP in USD. The exchange rate at which to execute the
   // dollar denominated transactions in the input CSV.
-  usdToXrpRate: 0.25,
+  usdToXrpRate: 1.0,
   // The XRP wallet seed. Used to generate the local wallet to sign
   // transactions (the wallet and seed only exist ephemerally in memory
   // while running the payout).
@@ -42,7 +42,7 @@ program
     console.log('  inputCsv - The input CSV path. Should point to a file that contains the receiver\'s XRP details.')
     console.log('  outputCsv - The output CSV path. Will be generated after xrp-batch-payout-cli is complete.')
     console.log('  network - The XRPL network. Either \'testnet\' or \'mainnet\'.')
-    console.log('  grpcUrl - The web gRPC endpoint for the rippleD node.')
+    console.log('  serverUrl - The websocket endpoint for the rippleD node.')
     console.log('  usdToXrpRate - The price of 1 XRP in USD.')
     console.log('  secret - The XRP wallet seed. Used to generate an ephemeral wallet to locally sign transactions.')
     console.log('  confirmed - The confirmation status. Indicates whether to start or cancel the payout.')
@@ -50,13 +50,13 @@ program
     console.log('Example prompt overrides object:')
     console.log(JSON.stringify(exampleOverrides, null, 2))
   })
+  .action(function (options){
+    // Get overrides if the file path is set
+    let overrides
+    if (fs.existsSync(options.file)) {
+      overrides = JSON.parse((fs.readFileSync(options.file)).toString())
+    }
+    // Start XRP payout
+    payout(overrides)
+  })
   .parse(process.argv)
-
-// Get overrides if the file path is set
-let overrides
-if (fs.existsSync(program.file)) {
-  overrides = JSON.parse((fs.readFileSync(program.file)).toString())
-}
-
-// Start XRP payout
-payout(overrides)

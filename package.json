@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@fintechstudios/eslint-plugin-chai-as-promised": "^3.0.2",
+    "@fintechstudios/eslint-plugin-chai-as-promised": "^3.1.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "@types/node": "^17.0.0",

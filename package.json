@@ -42,7 +42,7 @@
     "@fintechstudios/eslint-plugin-chai-as-promised": "^3.1.0",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^17.0.4",
+    "@types/node": "^18.11.8",
     "@types/papaparse": "^5.3.1",
     "@types/prompts": "^2.0.14",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
